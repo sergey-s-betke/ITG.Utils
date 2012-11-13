@@ -1,7 +1,7 @@
 ﻿[CmdletBinding()]
 param()
 
-$Module = Import-Module `
+Import-Module `
 	(Join-Path `
 		-Path ( Split-Path -Path ( $MyInvocation.MyCommand.Path ) -Parent ) `
 		-ChildPath 'ITG.Utils' `
@@ -9,8 +9,7 @@ $Module = Import-Module `
 	-Force `
 	-Verbose `
 	-PassThru `
-;
-Get-Readme -Module $Module -OutDefaultFile;
+| Get-Readme -OutDefaultFile;
 
 set-variable `
 	-name test `
