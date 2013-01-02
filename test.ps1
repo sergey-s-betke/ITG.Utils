@@ -5,7 +5,8 @@
     ) `
     -Force `
 	-Verbose `
-;
+	-PassThru `
+| Get-Readme -OutDefaultFile;
 
 set-variable `
     -name test `
