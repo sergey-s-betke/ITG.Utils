@@ -1,80 +1,66 @@
 ﻿ITG.Utils
 =========
 
-Набор вспомогательных командлет и функций.
+Набор вспомогательных командлет и функций для PowerShell.
 
-Версия модуля: **1.1.0**
+Версия модуля: **2.0.0**
 
 Функции модуля
 --------------
 
-### CustomMember
+### Dictionary
 
-#### Обзор [Add-CustomMember][]
+#### Обзор [ConvertFrom-Dictionary][]
+
+Конвертация таблицы транслитерации и любых других словарей в массив объектов
+с целью дальнейшей сериализации.
+
+	ConvertFrom-Dictionary [-InputObject] <IDictionary> <CommonParameters>
+
+Подробнее - [ConvertFrom-Dictionary][].
+
+### ObjectProperty
+
+#### Обзор [ConvertTo-ObjectProperty][]
 
 Преобразование однотипных объектов со свойствами key и value в единый объект,
 свойства которого определены поданными на конвейер парами.
 
-	Add-CustomMember [-Name] <String> [-Value] <Object> [-Force] <CommonParameters>
+	ConvertTo-ObjectProperty -Key <String> -Value <Object> [-TypeName <Type>] [-PassThru] <CommonParameters>
 
-Подробнее - [Add-CustomMember][].
+	ConvertTo-ObjectProperty -Key <String> -Value <Object> [-InputObject <IDictionary>] [-PassThru] <CommonParameters>
 
-### Pair
+Подробнее - [ConvertTo-ObjectProperty][].
 
-#### Обзор [Add-Pair][]
+#### Обзор [Set-ObjectProperty][]
 
-Преобразование / добавление однотипных объектов со свойствами key и value в hashtable / любой другой словарь.
+Добавление либо изменение свойств объекта, поступающего по контейнеру
 
-	Add-Pair [-Key] <String> [-Value] <Object> [-InputObject <IDictionary>] [-PassThru] <CommonParameters>
+	Set-ObjectProperty [-Key] <String> [-Value] <Object> -InputObject <Object> [-PassThru] <CommonParameters>
 
-Подробнее - [Add-Pair][].
-
-#### Обзор [Get-Pair][]
-
-Конвертация таблицы транслитерации и любых других словарей в массив объектов с целью дальнейшей сериализации.
-
-	Get-Pair [-InputObject] <IDictionary> <CommonParameters>
-
-Подробнее - [Get-Pair][].
+Подробнее - [Set-ObjectProperty][].
 
 Подробное описание функций модуля
 ---------------------------------
 
-#### Add-CustomMember
+#### ConvertFrom-Dictionary
 
-Преобразование однотипных объектов со свойствами key и value в единый объект,
-свойства которого определены поданными на конвейер парами.
+Конвертация таблицы транслитерации и любых других словарей в массив объектов
+с целью дальнейшей сериализации.
 
 ##### Синтаксис
 
-	Add-CustomMember [-Name] <String> [-Value] <Object> [-Force] <CommonParameters>
+	ConvertFrom-Dictionary [-InputObject] <IDictionary> <CommonParameters>
 
 ##### Параметры
 
-- `Name <String>`
-        Идентификатор свойства
+- `InputObject <IDictionary>`
+        Исходный словарь для конвейеризации
 
         Требуется? true
         Позиция? 1
         Значение по умолчанию
-        Принимать входные данные конвейера?true (ByPropertyName)
-        Принимать подстановочные знаки?
-
-- `Value <Object>`
-        Значение Value для hashtable
-
-        Требуется? true
-        Позиция? 2
-        Значение по умолчанию
-        Принимать входные данные конвейера?true (ByPropertyName)
-        Принимать подстановочные знаки?
-
-- `Force [<SwitchParameter>]`
-
-        Требуется? false
-        Позиция? named
-        Значение по умолчанию
-        Принимать входные данные конвейера?false
+        Принимать входные данные конвейера?true (ByValue)
         Принимать подстановочные знаки?
 
 - `<CommonParameters>`
@@ -87,23 +73,20 @@
 
 ##### Примеры использования
 
-1. 'А'='A';
-	'Б'='B';
-	'В'='V';
-	'Г'='G';
-} `
-| [Add-CustomMember][] `
-;
+1. Пример 1.
 
-		@{
+		@{'А'='A'; 'Б'='B'; 'В'='V'} | ConvertFrom-Dictionary;
 
-#### Add-Pair
+#### ConvertTo-ObjectProperty
 
-Преобразование / добавление однотипных объектов со свойствами key и value в hashtable / любой другой словарь.
+Преобразование однотипных объектов со свойствами key и value в единый объект,
+свойства которого определены поданными на конвейер парами.
 
 ##### Синтаксис
 
-	Add-Pair [-Key] <String> [-Value] <Object> [-InputObject <IDictionary>] [-PassThru] <CommonParameters>
+	ConvertTo-ObjectProperty -Key <String> -Value <Object> [-TypeName <Type>] [-PassThru] <CommonParameters>
+
+	ConvertTo-ObjectProperty -Key <String> -Value <Object> [-InputObject <IDictionary>] [-PassThru] <CommonParameters>
 
 ##### Параметры
 
@@ -111,7 +94,7 @@
         Ключ key для hashtable.
 
         Требуется? true
-        Позиция? 1
+        Позиция? named
         Значение по умолчанию
         Принимать входные данные конвейера?true (ByPropertyName)
         Принимать подстановочные знаки?
@@ -120,9 +103,18 @@
         Значение Value для hashtable.
 
         Требуется? true
-        Позиция? 2
+        Позиция? named
         Значение по умолчанию
         Принимать входные данные конвейера?true (ByPropertyName)
+        Принимать подстановочные знаки?
+
+- `TypeName <Type>`
+        Тип словаря, будет использован при создании нового словаря.
+
+        Требуется? false
+        Позиция? named
+        Значение по умолчанию
+        Принимать входные данные конвейера?false
         Принимать подстановочные знаки?
 
 - `InputObject <IDictionary>`
@@ -152,54 +144,57 @@
 
 ##### Примеры использования
 
-1. 'А'='A';
-	'Б'='B';
-	'В'='V';
-	'Г'='G';
-} `
-| [Get-Pair][] `
-| ? { 'А','Б' -contains $_.key } `
-| [Add-Pair][] -PassThru `
-;
+1. Пример 1.
 
-		@{
+		@{'А'='A'; 'Б'='B'} | ConvertFrom-Dictionary | ? { 'А' -contains $_.key } | ConvertTo-ObjectProperty -PassThru;
 
-2. 'А'='A';
-	'Б'='B';
-	'В'='V';
-	'Г'='G';
-} `
-| [Get-Pair][] `
-| [Add-Pair][] -InputObject (@{a=2;zzzzzzzzzzzz=3}) -PassThru
+2. Пример 2.
 
-		@{
+		@{'А'='A'; 'Б'='B'} | ConvertFrom-Dictionary | ConvertTo-ObjectProperty -InputObject (@{a=2;zzzzz=3}) -PassThru;
 
-3. 'А'='A';
-	'Б'='B';
-	'В'='V';
-	'Г'='G';
-} `
-| [Add-Pair][] -key zzzzzzzzzzzz -value 3 -PassThru
+#### Set-ObjectProperty
 
-		@{
-
-#### Get-Pair
-
-Конвертация таблицы транслитерации и любых других словарей в массив объектов с целью дальнейшей сериализации.
+Добавление либо изменение свойств объекта, поступающего по контейнеру
 
 ##### Синтаксис
 
-	Get-Pair [-InputObject] <IDictionary> <CommonParameters>
+	Set-ObjectProperty [-Key] <String> [-Value] <Object> -InputObject <Object> [-PassThru] <CommonParameters>
 
 ##### Параметры
 
-- `InputObject <IDictionary>`
-        Исходный словарь для конвейеризации
+- `Key <String>`
+        Ключ key для hashtable.
 
         Требуется? true
         Позиция? 1
         Значение по умолчанию
+        Принимать входные данные конвейера?false
+        Принимать подстановочные знаки?
+
+- `Value <Object>`
+        Значение Value для hashtable.
+
+        Требуется? true
+        Позиция? 2
+        Значение по умолчанию
+        Принимать входные данные конвейера?false
+        Принимать подстановочные знаки?
+
+- `InputObject <Object>`
+        Исходный словарь, в который будут добавлены сопоставления.
+
+        Требуется? true
+        Позиция? named
+        Значение по умолчанию
         Принимать входные данные конвейера?true (ByValue)
+        Принимать подстановочные знаки?
+
+- `PassThru [<SwitchParameter>]`
+
+        Требуется? false
+        Позиция? named
+        Значение по умолчанию
+        Принимать входные данные конвейера?false
         Принимать подстановочные знаки?
 
 - `<CommonParameters>`
@@ -212,21 +207,19 @@
 
 ##### Примеры использования
 
-1. 'А'='A';
-	'Б'='B';
-	'В'='V';
-	'Г'='G';
-} `
-| [Get-Pair][] `
-;
+1. Добавляем в hashtable (можно и PSObject) свойство zz со значением 3.
 
-		@{
+		@{'А'='A'; 'Б'='B'; 'В'='V'} | Set-ObjectProperty -key zz -value 3 -PassThru
+
+2. Пример 2.
+
+		Set-ObjectProperty -InputObject $test -key prop -value 'val' -PassThru;
 
 
 [about_CommonParameters]: http://go.microsoft.com/fwlink/?LinkID=113216 "Описание параметров, которые могут использоваться с любым командлетом."
-[Add-CustomMember]: <ITG.Utils#Add-CustomMember> "Преобразование однотипных объектов со свойствами key и value в единый объект, свойства которого определены поданными на конвейер парами."
-[Add-Pair]: <ITG.Utils#Add-Pair> "Преобразование / добавление однотипных объектов со свойствами key и value в hashtable / любой другой словарь."
-[Get-Pair]: <ITG.Utils#Get-Pair> "Конвертация таблицы транслитерации и любых других словарей в массив объектов с целью дальнейшей сериализации."
+[ConvertFrom-Dictionary]: <ITG.Utils#ConvertFrom-Dictionary> "Конвертация таблицы транслитерации и любых других словарей в массив объектов с целью дальнейшей сериализации."
+[ConvertTo-ObjectProperty]: <ITG.Utils#ConvertTo-ObjectProperty> "Преобразование однотипных объектов со свойствами key и value в единый объект, свойства которого определены поданными на конвейер парами."
+[Set-ObjectProperty]: <ITG.Utils#Set-ObjectProperty> "Добавление либо изменение свойств объекта, поступающего по контейнеру"
 
 ---------------------------------------
 
